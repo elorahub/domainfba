@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Pricing & Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-700">
+
+    <!-- Navigation / Header -->
+    <nav class="sticky top-0 z-50 glass-effect border-b border-slate-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-globe text-indigo-600 text-2xl"></i>
+                <span class="text-xl font-bold tracking-tight">Elora<span class="text-indigo-600">Hub</span></span>
+            </div>
+            <button class="md:hidden text-slate-600"><i class="fa-solid fa-bars"></i></button>
+            <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
+                <a href="#" class="hover:text-indigo-600 transition">Pricing</a>
+                <a href="#" class="hover:text-indigo-600 transition">Bundles</a>
+                <a href="#" class="hover:text-indigo-600 transition">Support</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section & Search -->
+    <div class="bg-white border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 py-12 md:py-20 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+                Find your perfect <span class="gradient-text">Identity</span>
+            </h1>
+            <p class="text-slate-500 mb-8 text-lg">Secure your name on the web with the best prices in the market.</p>
+            
+            <!-- Value Props -->
+            <div class="flex flex-wrap justify-center gap-4 mb-10 text-sm font-medium text-slate-700">
+                <span class="flex items-center px-3 py-1 bg-green-50 text-green-700 rounded-full border border-green-200">
+                    <i class="fa-solid fa-check-circle mr-2"></i> No termination issues
+                </span>
+                <span class="flex items-center px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-200">
+                    <i class="fa-solid fa-bolt mr-2"></i> Fast email delivery
+                </span>
+                <span class="flex items-center px-3 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200">
+                    <i class="fa-solid fa-headset mr-2"></i> 24/7 Support
+                </span>
+            </div>
+
+            <!-- Search Box -->
+            <div class="relative max-w-2xl mx-auto group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 group-focus-within:text-indigo-500 transition"></i>
+                </div>
+                <input type="text" id="domainInput" 
+                    class="block w-full pl-11 pr-32 py-4 text-lg border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition outline-none shadow-sm" 
+                    placeholder="Type your desired domain name..."
+                    onkeyup="handleEnter(event)">
+                <button onclick="searchDomain()" 
+                    class="absolute right-2 top-2 bottom-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 rounded-lg transition active:scale-95">
+                    Search
+                </button>
+            </div>
+            <p class="mt-3 text-xs text-slate-400">Try searching for generic terms like "shop", "blog", or specific domains like "mysite.xyz"</p>
+        </div>
+    </div>
+
+    <!-- Search Results Container -->
+    <div id="searchResults" class="max-w-6xl mx-auto px-4 py-8 hidden">
+        <h3 class="text-lg font-bold text-slate-800 mb-4">Search Results</h3>
+        <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Results injected here -->
+        </div>
+    </div>
+
+    <!-- Bundles Section -->
+    <section class="py-12 bg-indigo-50 border-y border-indigo-100">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">
+                        <i class="fa-solid fa-layer-group text-indigo-600 mr-2"></i>Saver Bundles
+                    </h2>
+                    <p class="text-slate-500 text-sm mt-1">Buy 3 domains together and get an automatic 2% discount.</p>
+                </div>
+            </div>
+            
+            <div id="bundleContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Bundles injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Pricing List -->
+    <section class="py-12 max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-slate-800">All Extensions</h2>
+            <div class="text-sm text-slate-500 bg-white px-3 py-1 rounded-md border border-slate-200 shadow-sm">
+                Sorted: Lowest Price <i class="fa-solid fa-arrow-down-short-wide ml-1"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <!-- Table Header -->
+            <div class="grid grid-cols-3 bg-slate-50 p-4 font-semibold text-slate-600 text-sm uppercase tracking-wider border-b border-slate-200">
+                <div class="col-span-2">Extension</div>
+                <div class="text-right">Price / Year</div>
+            </div>
+            
+            <!-- List Container -->
+            <div id="priceList" class="divide-y divide-slate-100">
+                <!-- Rows injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="mb-4">&copy; EloraHub. Prices subject to change without notice.</p>
+            <div class="flex justify-center space-x-4 text-xl">
+                <i class="fa-brands fa-facebook hover:text-white cursor-pointer transition"></i>
+                <i class="fa-brands fa-twitter hover:text-white cursor-pointer transition"></i>
+                <i class="fa-brands fa-instagram hover:text-white cursor-pointer transition"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Data Configuration
+        const rawData = [
+            { ext: '.cfd', price: 90 },
+            { ext: '.site', price: 90 },
+            { ext: '.online', price: 90 },
+            { ext: '.click', price: 90 },
+            { ext: '.asia', price: 100 },
+            { ext: '.lol', price: 110 },
+            { ext: '.fun', price: 120 },
+            { ext: '.help', price: 120 },
+            { ext: '.space', price: 120 },
+            { ext: '.website', price: 120 },
+            { ext: '.digital', price: 120 },
+            { ext: '.beauty', price: 120 },
+            { ext: '.cloud', price: 130 },
+            { ext: '.top', price: 140 },
+            { ext: '.bond', price: 150 },
+            { ext: '.icu', price: 150 },
+            { ext: '.fit', price: 150 },
+            { ext: '.life', price: 150 },
+            { ext: '.rest', price: 150 },
+            { ext: '.xyz', price: 150 },
+            { ext: '.link', price: 180 },
+            { ext: '.love', price: 180 },
+            { ext: '.biz', price: 200 },
+            { ext: '.blog', price: 220 },
+            { ext: '.email', price: 300 }
+        ];
+
+        // Sort data low to high (just in case)
+        const domains = rawData.sort((a, b) => a.price - b.price);
+
+        // 2. Render Functions
+        
+        // Render Main Price List
+        function renderPriceList() {
+            const listContainer = document.getElementById('priceList');
+            let html = '';
+            
+            domains.forEach(d => {
+                // Determine badge color based on price range
+                let badgeClass = 'bg-slate-100 text-slate-600';
+                if(d.price <= 100) badgeClass = 'bg-green-100 text-green-700';
+                else if(d.price >= 200) badgeClass = 'bg-purple-100 text-purple-700';
+
+                html += `
+                    <div class="grid grid-cols-3 p-4 hover:bg-slate-50 transition group items-center">
+                        <div class="col-span-2 flex items-center">
+                            <span class="font-bold text-lg text-slate-800 group-hover:text-indigo-600 transition">${d.ext}</span>
+                            ${d.price <= 90 ? `<span class="ml-3 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${badgeClass}">Hot</span>` : ''}
+                        </div>
+                        <div class="text-right">
+                            <span class="font-bold text-slate-800">₱${d.price}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            listContainer.innerHTML = html;
+        }
+
+        // Render Bundles
+        function renderBundles() {
+            const bundleContainer = document.getElementById('bundleContainer');
+            
+            // Define 3 bundles
+            const bundles = [
+                { name: "Starter Pack", items: ['.site', '.online', '.website'], icon: 'fa-rocket' },
+                { name: "Creative Pack", items: ['.art', '.design', '.fun'], custom: true }, // Logic fallback handles missing domains
+                { name: "Biz Pack", items: ['.biz', '.xyz', '.cloud'], icon: 'fa-briefcase' },
+                { name: "Social Pack", items: ['.blog', '.click', '.link'], icon: 'fa-users' }
+            ];
+
+            // Filter bundles to only use domains we actually have prices for
+            // For the Creative Pack example, I deliberately used domains not in list to show fallback, 
+            // but let's stick to the list provided to ensure valid prices.
+            const validBundles = [
+                { name: "Starter Kit", items: ['.site', '.online', '.website'], icon: 'fa-rocket', color: 'blue' },
+                { name: "Tech Stack", items: ['.cloud', '.digital', '.space'], icon: 'fa-server', color: 'indigo' },
+                { name: "Lifestyle", items: ['.life', '.fit', '.beauty'], icon: 'fa-heart', color: 'pink' }
+            ];
+
+            let html = '';
+
+            validBundles.forEach(bundle => {
+                // Calculate prices
+                let subtotal = 0;
+                let itemsHtml = '';
+                
+                bundle.items.forEach(ext => {
+                    const domainObj = domains.find(d => d.ext === ext);
+                    if(domainObj) {
+                        subtotal += domainObj.price;
+                        itemsHtml += `<div class="flex justify-between text-sm text-slate-600 mb-1"><span>${ext}</span><span>₱${domainObj.price}</span></div>`;
+                    }
+                });
+
+                const discount = subtotal * 0.02; // 2%
+                const total = subtotal - discount;
+
+                html += `
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden group hover:shadow-md transition">
+                        <div class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">SAVE 2%</div>
+                        
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-lg bg-${bundle.color}-100 text-${bundle.color}-600 flex items-center justify-center mr-3">
+                                <i class="fa-solid ${bundle.icon}"></i>
+                            </div>
+                            <h3 class="font-bold text-lg">${bundle.name}</h3>
+                        </div>
+
+                        <div class="mb-4 border-b border-slate-100 pb-4">
+                            ${itemsHtml}
+                        </div>
+
+                        <div class="flex justify-between items-end">
+                            <div class="text-right w-full">
+                                <span class="block text-xs text-slate-400 line-through">₱${subtotal.toFixed(0)}</span>
+                                <span class="block text-2xl font-bold text-slate-800">₱${total.toFixed(2)}</span>
+                            </div>
+                        </div>
+                        <button class="mt-4 w-full py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition">Add Bundle</button>
+                    </div>
+                `;
+            });
+
+            bundleContainer.innerHTML = html;
+        }
+
+        // 3. Search Logic
+        function handleEnter(e) {
+            if(e.key === 'Enter') searchDomain();
+        }
+
+        function searchDomain() {
+            const input = document.getElementById('domainInput').value.trim().toLowerCase();
+            const resultsSection = document.getElementById('searchResults');
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            if(!input) return;
+
+            resultsSection.classList.remove('hidden');
+            
+            // Check if user typed an extension
+            let searchTerm = input;
+            let specificExt = null;
+            
+            if(input.includes('.')) {
+                const parts = input.split('.');
+                searchTerm = parts[0];
+                specificExt = '.' + parts[1];
+            }
+
+            // Generate suggestions
+            // If user typed 'example.com' (and we don't have .com), or just 'example'
+            // We want to show our inventory.
+            
+            let html = '';
+            
+            // 1. If specific extension requested, try to find it
+            if(specificExt) {
+                const exactMatch = domains.find(d => d.ext === specificExt);
+                if(exactMatch) {
+                    html += createResultCard(searchTerm, exactMatch, true);
+                } else {
+                    // Extension not supported message
+                    html += `
+                        <div class="col-span-1 md:col-span-3 bg-red-50 border border-red-100 p-4 rounded-lg text-red-700 text-center mb-4">
+                            <i class="fa-solid fa-circle-exclamation mr-2"></i>
+                            We don't currently offer <strong>${specificExt}</strong>, but check out these alternatives!
+                        </div>
+                    `;
+                }
+            }
+
+            // 2. Suggest popular/cheap ones from our list (top 5)
+            // Filter out the one we already showed if it was an exact match
+            const suggestions = domains.filter(d => d.ext !== specificExt).slice(0, 5);
+            
+            suggestions.forEach(d => {
+                html += createResultCard(searchTerm, d, false);
+            });
+
+            resultsGrid.innerHTML = html;
+            
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function createResultCard(name, domainObj, isExact) {
+            const fullName = name + domainObj.ext;
+            // Simulate availability: Hash string to get semi-random but consistent availability
+            // Actually, for this simulation, let's just make 90% of them available for "No termination issues" vibe
+            const isAvailable = true; 
+
+            return `
+                <div class="bg-white rounded-lg border ${isExact ? 'border-indigo-500 ring-2 ring-indigo-100' : 'border-slate-200'} p-5 animate-fade-in relative">
+                    ${isExact ? '<span class="absolute top-2 right-2 text-indigo-600 text-xs font-bold bg-indigo-50 px-2 py-1 rounded">EXACT MATCH</span>' : ''}
+                    
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-bold text-lg text-slate-800 break-all">${fullName}</h4>
+                    </div>
+                    
+                    <div class="flex items-center text-green-600 text-sm font-medium mb-4">
+                        <i class="fa-solid fa-check mr-1"></i> Available
+                    </div>
+                    
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                        <span class="text-2xl font-bold text-slate-800">₱${domainObj.price}</span>
+                        <button onclick="addToCart('${fullName}')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addToCart(domain) {
+            // Simple feedback simulation
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Added!';
+            btn.classList.add('bg-green-600');
+            btn.classList.remove('bg-indigo-600');
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('bg-green-600');
+                btn.classList.add('bg-indigo-600');
+            }, 1000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPriceList();
+            renderBundles();
+        });
+
+    </script>
+</body>
+</html>
